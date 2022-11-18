@@ -42,7 +42,14 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.bg_text_yellow)
             }
             BackchickList = {
-                it.size
+                var sp = StringBuffer()
+                for(date in it){
+                    sp.append(date.name)
+                    sp.append(",")
+                    sp.append(date.id)
+                    sp.append("  ")
+                }
+                textView.text = sp.toString()
             }
         }
 

@@ -81,6 +81,12 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 dialog!!.window!!.setLayout(dm.widthPixels, maxDialogHeight)
             }
         }
+        chickList.clear()
+        for (it in originData) {
+            if (it.isChick) {
+                chickList.add(it)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +109,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         vb.rvData.layoutManager = glm
         glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (originData?.get(position)?.live == 1) {
+                return if (originData.get(position)?.live == 1) {
                     spanCount
                 } else {
                     1
@@ -111,8 +117,8 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             }
         }
 
-        var adapter = TreeAdapter<T>()
-        adapter.data = originData!!
+        val adapter = TreeAdapter<T>()
+        adapter.data = originData
         adapter.setDate(requireContext(), onChickItem = {
             if (it?.isChick == false) {
                 if (chickList.size < maximum) {
@@ -163,13 +169,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     two.dlc_index = index
                     index++
                     newDate.add(two)
-                    if (chickList.size < maximum && two.isChick) {
-                        chickList.add(two)
-                    }
                 }
-            }
-            if (chickList.size < maximum && it.isChick) {
-                chickList.add(it)
             }
         }
         return newDate
@@ -188,7 +188,6 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
     override fun show(manager: FragmentManager, tag: String?) {
         super.show(manager, tag)
-        chickList.clear()
     }
 
 }
