@@ -1,5 +1,7 @@
 package com.dlc.treeselector
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
@@ -13,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var textView = findViewById<TextView>(R.id.tv_text)
+        var tvChick = findViewById<TextView>(R.id.tv_chick)
 
         var array = ArrayList<AddressModel>()
         for (it in 0..2) {
@@ -34,16 +37,19 @@ class MainActivity : AppCompatActivity() {
             data = array
             isTreeArray = true
             maximum = 3
+            alwaysListNotNull = false
             getConfirm = {
-                it.setPadding(dip2px(this@MainActivity, 12F),
+                it.setPadding(
+                    dip2px(this@MainActivity, 12F),
                     dip2px(this@MainActivity, 7F),
                     dip2px(this@MainActivity, 12F),
-                    dip2px(this@MainActivity, 7F))
+                    dip2px(this@MainActivity, 7F)
+                )
                 it.setBackgroundResource(R.drawable.bg_text_yellow)
             }
             BackchickList = {
                 var sp = StringBuffer()
-                for(date in it){
+                for (date in it) {
                     sp.append(date.name)
                     sp.append(",")
                     sp.append(date.id)
@@ -56,6 +62,16 @@ class MainActivity : AppCompatActivity() {
         textView.setOnClickListener {
             selectDialog.show(supportFragmentManager, "selectDialog")
         }
+        tvChick.setOnClickListener {
+            selectDialog.show(supportFragmentManager, "selectDialog")
+        }
+
+        val objectAnimation = ObjectAnimator.ofFloat(tvChick, "scaleY", 1f, 2f)
+        objectAnimation.duration = 1000
+        objectAnimation.repeatCount = 2
+        objectAnimation.repeatMode = ValueAnimator.REVERSE
+        objectAnimation.repeatCount = ValueAnimator.INFINITE
+        objectAnimation.start()
 
     }
 

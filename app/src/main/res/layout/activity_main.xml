@@ -16,4 +16,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_chick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="暴力点击！！！！"
+        android:textColor="@color/color_333333"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/tv_text"
+        app:layout_constraintStart_toStartOf="@id/tv_text"
+        app:layout_constraintTop_toBottomOf="@id/tv_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

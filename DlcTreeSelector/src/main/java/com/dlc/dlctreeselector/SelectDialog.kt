@@ -58,6 +58,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //返回选中数值
     var BackchickList: ((ArrayList<T>) -> Unit)? = null
 
+    //是否为必须选中
+    var alwaysListNotNull = true
+
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
         return this
@@ -140,11 +143,16 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             dialog?.dismiss()
         }
         vb.tvConfirm.setOnClickListener {
-            if (chickList.size > 0) {
+            if (alwaysListNotNull){
+                if (chickList.size > 0) {
+                    BackchickList?.invoke(chickList)
+                    dialog?.dismiss()
+                } else {
+                    Toast.makeText(context, "请选择至少一个选项", Toast.LENGTH_LONG).show()
+                }
+            }else{
                 BackchickList?.invoke(chickList)
                 dialog?.dismiss()
-            } else {
-                Toast.makeText(context, "请选择至少一个选项", Toast.LENGTH_LONG).show()
             }
 
         }
