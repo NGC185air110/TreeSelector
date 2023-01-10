@@ -3,14 +3,14 @@
     android:id="@+id/tv_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="12dp"
-    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="23dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/bg_item_text"
     android:gravity="center"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
+    android:paddingTop="11dp"
+    android:paddingBottom="11dp"
     android:text="浙江省"
-    android:textColor="@color/color_5D6C7C"
+    android:textColor="@color/color_333333"
     android:textSize="16dp">
 
 </TextView>

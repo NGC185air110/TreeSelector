@@ -1,20 +1,24 @@
 package com.dlc.dlctreeselector
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.dlc.dlctreeselector.adapter.TreeAdapter
 import com.dlc.dlctreeselector.databinding.DialogSelectBinding
 import com.dlc.dlctreeselector.model.DlcTree
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
@@ -61,6 +65,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //是否为必须选中
     var alwaysListNotNull = true
 
+    //显示状态
+    var dialogStyle: DialogStyle = DialogStyle.NORMAL
+
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
         return this
@@ -71,19 +78,33 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val dm = DisplayMetrics()
-        when (maxDialogHeight) {
-            0 -> {
-                requireActivity().windowManager.defaultDisplay.getMetrics(dm)
-                dialog!!.window!!.setLayout(dm.widthPixels, dialog!!.window!!.attributes.height)
-            }
-            -1 -> {
-
-            }
-            else -> {
-                dialog!!.window!!.setLayout(dm.widthPixels, maxDialogHeight)
+        val dialog = dialog as BottomSheetDialog
+        if (dialog != null) {
+            val bottomSheet =
+                dialog.delegate.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet!!.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT  //自定义高度
+        }
+        val view = view
+        view!!.post {
+            val parent = view.parent as View
+            val params = parent.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior
+            val bottomSheetBehavior = behavior as BottomSheetBehavior<*>?
+            when (maxDialogHeight) {
+                0 -> {
+                    bottomSheetBehavior!!.peekHeight = view.measuredHeight
+                }
+                -1 -> {
+                    bottomSheetBehavior!!.maxHeight = this.resources.displayMetrics.heightPixels / 2
+                    bottomSheetBehavior!!.peekHeight =
+                        this.resources.displayMetrics.heightPixels / 2
+                }
+                else -> {
+                    bottomSheetBehavior!!.peekHeight = dp2px(maxDialogHeight.toFloat())
+                }
             }
         }
+
         chickList.clear()
         for (it in originData) {
             if (it.isChick) {
@@ -108,11 +129,46 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         getCancel?.invoke(vb.tvCancel)
 
         vb.llBg.setBackgroundResource(dialogBg)
+
+        when (dialogStyle) {
+            DialogStyle.BOTTOM -> {
+                vb.tvConfirm.visibility = View.GONE
+                vb.tvConfirmBottom.visibility = View.VISIBLE
+                vb.tvCancel.visibility = View.GONE
+                vb.ivCancel.visibility = View.VISIBLE
+                vb.line.visibility = View.GONE
+
+                vb.rvData.setPadding(
+                    vb.rvData.paddingLeft,
+                    vb.rvData.paddingTop,
+                    0,
+                    dp2px((vb.tvConfirmBottom.height + vb.tvConfirmBottom.paddingBottom + 20).toFloat())
+                )
+                vb.llBg.setPadding(
+                    0,
+                    0,
+                    0,
+                    dp2px(10F)
+                )
+            }
+            else -> {
+                vb.tvConfirm.visibility = View.VISIBLE
+                vb.tvConfirmBottom.visibility = View.GONE
+                vb.tvCancel.visibility = View.VISIBLE
+                vb.ivCancel.visibility = View.GONE
+                vb.line.visibility = View.VISIBLE
+                vb.rvData.setPadding(
+                    vb.rvData.paddingLeft,
+                    vb.rvData.paddingTop, 0, 0
+                )
+            }
+        }
+
         val glm = GridLayoutManager(context, spanCount)
         vb.rvData.layoutManager = glm
         glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (originData.get(position)?.live == 1) {
+                return if (originData[position].live == 1) {
                     spanCount
                 } else {
                     1
@@ -142,22 +198,27 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         vb.tvCancel.setOnClickListener {
             dialog?.dismiss()
         }
-        vb.tvConfirm.setOnClickListener {
-            if (alwaysListNotNull){
-                if (chickList.size > 0) {
-                    BackchickList?.invoke(chickList)
-                    dialog?.dismiss()
-                } else {
-                    Toast.makeText(context, "请选择至少一个选项", Toast.LENGTH_LONG).show()
-                }
-            }else{
-                BackchickList?.invoke(chickList)
-                dialog?.dismiss()
-            }
-
+        vb.ivCancel.setOnClickListener {
+            dialog?.dismiss()
         }
+        vb.tvConfirm.setOnClickListener(::confirmClick)
+        vb.tvConfirmBottom.setOnClickListener(::confirmClick)
 
         return vb.root
+    }
+
+    private fun confirmClick(view: View) {
+        if (alwaysListNotNull) {
+            if (chickList.size > 0) {
+                BackchickList?.invoke(chickList)
+                dialog?.dismiss()
+            } else {
+                Toast.makeText(context, "请选择至少一个选项", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            BackchickList?.invoke(chickList)
+            dialog?.dismiss()
+        }
     }
 
     /**
@@ -198,4 +259,17 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         super.show(manager, tag)
     }
 
+    private fun dp2px(dpValue: Float): Int {
+        val scale = Resources.getSystem().displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
+    }
+
+}
+
+/**
+ * NORMAL正常
+ * BOTTOM底部
+ */
+enum class DialogStyle {
+    NORMAL, BOTTOM
 }

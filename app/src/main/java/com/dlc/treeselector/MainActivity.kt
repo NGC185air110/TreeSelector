@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.dlc.dlctreeselector.DialogStyle
 import com.dlc.dlctreeselector.SelectDialog
 import com.dlc.treeselector.model.AddressModel
 import kotlin.random.Random
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         var selectDialog = SelectDialog<AddressModel>().builder {
+            dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = true
             maximum = 3
