@@ -1,10 +1,8 @@
 package com.dlc.dlctreeselector
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +65,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
     //显示状态
     var dialogStyle: DialogStyle = DialogStyle.NORMAL
+
+    var itemMarginEnd: Float = 23F
+    var itemMarginBottom: Float = 10F
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -192,7 +193,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             } else {
                 chickList.remove(it)
             }
-        })
+        }, itemMarginEnd = itemMarginEnd, itemMarginBottom = itemMarginBottom)
         vb.rvData.adapter = adapter
 
         vb.tvCancel.setOnClickListener {

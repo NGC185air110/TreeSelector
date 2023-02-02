@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
             dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = true
+            spanCount = 4
+            itemMarginEnd = 1F
+            itemMarginBottom = 20F
             maximum = 3
             alwaysListNotNull = false
             getConfirm = {
