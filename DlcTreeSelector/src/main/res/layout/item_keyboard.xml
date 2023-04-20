@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_text"
+    android:layout_width="38dp"
+    android:layout_height="38dp"
+    android:background="@drawable/bg_dlc_keyboard"
+    android:gravity="center"
+    android:text="京"
+    android:textColor="@color/color_333333"
+    android:textSize="16dp">
+
+</TextView>

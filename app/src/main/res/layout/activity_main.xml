@@ -29,4 +29,35 @@
         app:layout_constraintStart_toStartOf="@id/tv_text"
         app:layout_constraintTop_toBottomOf="@id/tv_text" />
 
+    <com.dlc.dlctreeselector.license.VerifyCodeEditText
+        android:id="@+id/verifyCode"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:inputType="text"
+        android:textColor="@color/teal_200"
+        android:textSize="18sp"
+        app:borderRadius="5dp"
+        app:borderWidth="1dp"
+        app:codeMargin="5dp"
+        app:cursorColor="@color/teal_200"
+        app:cursorWidth="1dp"
+        app:itemRectLength="40"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:normalBorderColor="@color/purple_200"
+        app:selectBorderColor="@color/teal_200"
+        app:separatorDisplay="true" />
+
+    <TextView
+        android:id="@+id/tv_car_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="点击选择车牌"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/verifyCode" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.dlc.dlctreeselector.DialogStyle
 import com.dlc.dlctreeselector.SelectDialog
+import com.dlc.dlctreeselector.license.LicensePlateNumberBottomDialog
 import com.dlc.treeselector.model.AddressModel
 import kotlin.random.Random
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         var textView = findViewById<TextView>(R.id.tv_text)
         var tvChick = findViewById<TextView>(R.id.tv_chick)
+        var tvCarNo = findViewById<TextView>(R.id.tv_car_no)
 
         var array = ArrayList<AddressModel>()
         for (it in 0..2) {
@@ -77,6 +79,17 @@ class MainActivity : AppCompatActivity() {
         objectAnimation.repeatMode = ValueAnimator.REVERSE
         objectAnimation.repeatCount = ValueAnimator.INFINITE
         objectAnimation.start()
+
+
+        var carDialog = LicensePlateNumberBottomDialog().builder {
+            isTrailer = true
+            backString = {
+                tvCarNo.text = it
+            }
+        }
+        tvCarNo.setOnClickListener {
+            carDialog.show(supportFragmentManager, "carDialog")
+        }
 
     }
 
