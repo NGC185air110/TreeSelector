@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity() {
         var tvCarNo = findViewById<TextView>(R.id.tv_car_no)
 
         var array = ArrayList<AddressModel>()
-        for (it in 0..2) {
+        for (it in 0..0) {
             var arrayLeft = ArrayList<AddressModel>()
-            for (index in 0..100) {
+            for (index in 0..0) {
                 arrayLeft.add(AddressModel().apply {
                     id = Random.nextInt()
                     name = "$it+$index"
@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
         var selectDialog = SelectDialog<AddressModel>().builder {
             dialogStyle = DialogStyle.BOTTOM
             data = array
-            isTreeArray = true
-            spanCount = 4
+            isTreeArray = false
+            spanCount = 2
             itemMarginEnd = 1F
-            itemMarginBottom = 20F
+            itemMarginBottom = 0F
             maximum = 3
             alwaysListNotNull = false
             getConfirm = {

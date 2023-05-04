@@ -112,6 +112,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 chickList.add(it)
             }
         }
+        isCancelable = false//关闭下滑
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,7 +144,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     vb.rvData.paddingLeft,
                     vb.rvData.paddingTop,
                     0,
-                    dp2px((vb.tvConfirmBottom.height + vb.tvConfirmBottom.paddingBottom + 20).toFloat())
+                    0,
                 )
                 vb.llBg.setPadding(
                     0,
