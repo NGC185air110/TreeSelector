@@ -30,9 +30,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     @DrawableRes
     var pitchOff = R.drawable.bg_item_text
 
-    var itemMarginEnd = 23F
-    var itemMarginBottom = 10F
-
 
     var onChickTitle: (() -> Unit)? = null
     var onChickItem: ((data: T?) -> Unit)? = null
@@ -43,8 +40,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         onChickItem: (data: T?) -> Unit,
         pitchOn: Int? = null,
         pitchOff: Int? = null,
-        itemMarginEnd: Float = 23F,
-        itemMarginBottom: Float = 10F,
     ) {
         this.context = context
         this.onChickTitle = onChickTitle
@@ -55,8 +50,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         if (pitchOff != null) {
             this.pitchOff = pitchOff
         }
-        this.itemMarginEnd = itemMarginEnd
-        this.itemMarginBottom = itemMarginBottom
     }
 
     class TreeAdapterTitleViewHolder : RecyclerView.ViewHolder {
@@ -116,9 +109,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             } else {
                 holder.tvText?.setBackgroundResource(pitchOff)
             }
-            val lp = holder.tvText?.layoutParams as RecyclerView.LayoutParams
-            lp.setMargins(0, 0, dp2px(itemMarginEnd), dp2px(itemMarginBottom))
-            holder.tvText?.layoutParams = lp
         }
     }
 

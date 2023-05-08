@@ -2,6 +2,7 @@ package com.dlc.dlctreeselector
 
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dlc.dlctreeselector.adapter.TreeAdapter
 import com.dlc.dlctreeselector.databinding.DialogSelectBinding
 import com.dlc.dlctreeselector.model.DlcTree
@@ -68,6 +70,12 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
     var itemMarginEnd: Float = 23F
     var itemMarginBottom: Float = 10F
+
+    var rvPaddingStart: Float = 15F
+    var rvPaddingTop: Float = 20F
+    var rvPaddingEnd: Float = 15F
+    var rvPaddingBottom: Float = 0F
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -166,6 +174,13 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             }
         }
 
+        vb.rvData.setPadding(
+            dp2px(rvPaddingStart),
+            dp2px(rvPaddingTop),
+            dp2px(rvPaddingEnd),
+            dp2px(rvPaddingBottom)
+        )
+
         val glm = GridLayoutManager(context, spanCount)
         vb.rvData.layoutManager = glm
         glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -194,8 +209,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             } else {
                 chickList.remove(it)
             }
-        }, itemMarginEnd = itemMarginEnd, itemMarginBottom = itemMarginBottom)
+        })
         vb.rvData.adapter = adapter
+        vb.rvData.addItemDecoration(SpacesItemDecoration(itemMarginEnd, itemMarginBottom))
 
         vb.tvCancel.setOnClickListener {
             dialog?.dismiss()
@@ -264,6 +280,31 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     private fun dp2px(dpValue: Float): Int {
         val scale = Resources.getSystem().displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
+    }
+
+    inner class SpacesItemDecoration(val end: Float, val bottom: Float) :
+        RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State,
+        ) {
+            if (parent.getChildAdapterPosition(view) == 0) {//开头
+                outRect.right = dp2px(end / 2)
+            } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) {//结尾
+                outRect.left = dp2px(end / 2)
+            } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) {//每行开头
+                outRect.right = dp2px(end / 2)
+            } else {//其他
+                outRect.right = dp2px(end / 2)
+                outRect.left = dp2px(end / 2)
+            }
+
+
+
+            outRect.bottom = dp2px(bottom)
+        }
     }
 
 }

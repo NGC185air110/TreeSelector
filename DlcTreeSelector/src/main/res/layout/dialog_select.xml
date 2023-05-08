@@ -71,7 +71,6 @@
         android:layout_below="@id/line"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingStart="15dp"
         android:paddingTop="20dp" />
 
     <TextView

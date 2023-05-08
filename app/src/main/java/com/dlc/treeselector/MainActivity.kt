@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity() {
         var tvCarNo = findViewById<TextView>(R.id.tv_car_no)
 
         var array = ArrayList<AddressModel>()
-        for (it in 0..0) {
+        for (it in 0..2) {
             var arrayLeft = ArrayList<AddressModel>()
-            for (index in 0..0) {
+            for (index in 0..30) {
                 arrayLeft.add(AddressModel().apply {
                     id = Random.nextInt()
                     name = "$it+$index"
@@ -40,11 +40,15 @@ class MainActivity : AppCompatActivity() {
             dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = false
-            spanCount = 2
-            itemMarginEnd = 1F
+            spanCount = 4
+            itemMarginEnd = 15F
             itemMarginBottom = 0F
             maximum = 3
             alwaysListNotNull = false
+            rvPaddingBottom = 0F
+            rvPaddingStart = 15F
+            rvPaddingEnd = 15F
+            rvPaddingTop = 20F
             getConfirm = {
                 it.setPadding(
                     dip2px(this@MainActivity, 12F),
