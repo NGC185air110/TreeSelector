@@ -290,19 +290,36 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             parent: RecyclerView,
             state: RecyclerView.State,
         ) {
-            if (parent.getChildAdapterPosition(view) == 0) {//开头
-                outRect.right = dp2px(end / 2)
-            } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) {//结尾
-                outRect.left = dp2px(end / 2)
-            } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) {//每行开头
-                outRect.right = dp2px(end / 2)
-            } else {//其他
-                outRect.right = dp2px(end / 2)
-                outRect.left = dp2px(end / 2)
+            if (isTreeArray) {
+                var liveSum = 0
+                data?.forEachIndexed { index, t ->
+                    if (t.live == 1) {
+                        liveSum++
+                    }
+                }
+                val index = parent.getChildAdapterPosition(view) + spanCount
+                if (index - liveSum == 0) {//开头
+                    outRect.right = dp2px(end / 2)
+                } else if (((index - liveSum) + 1) % spanCount == 0) {//结尾
+                    outRect.left = dp2px(end / 2)
+                } else if (((index - liveSum) + 1) % spanCount == 1) {//每行开头
+                    outRect.right = dp2px(end / 2)
+                } else {//其他
+                    outRect.right = dp2px(end / 2)
+                    outRect.left = dp2px(end / 2)
+                }
+            } else {
+                if (parent.getChildAdapterPosition(view) == 0) {//开头
+                    outRect.right = dp2px(end / 2)
+                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) {//结尾
+                    outRect.left = dp2px(end / 2)
+                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) {//每行开头
+                    outRect.right = dp2px(end / 2)
+                } else {//其他
+                    outRect.right = dp2px(end / 2)
+                    outRect.left = dp2px(end / 2)
+                }
             }
-
-
-
             outRect.bottom = dp2px(bottom)
         }
     }

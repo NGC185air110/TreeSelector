@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         var selectDialog = SelectDialog<AddressModel>().builder {
             dialogStyle = DialogStyle.BOTTOM
             data = array
-            isTreeArray = false
+            isTreeArray = true
             spanCount = 4
             itemMarginEnd = 15F
             itemMarginBottom = 0F
