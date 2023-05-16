@@ -296,6 +296,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             if (isTreeArray) {
                 if (originData[parent.getChildAdapterPosition(view)].live == 1) {
                     outRect.right = 0
+                    outRect.bottom = 0
                 } else {
                     val data = originData[parent.getChildAdapterPosition(view)]
                     if ((data.dlc_index) == 0) {//开头
@@ -308,6 +309,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                         outRect.right = dp2px(end / 2)
                         outRect.left = dp2px(end / 2)
                     }
+                    outRect.bottom = dp2px(bottom)
                 }
             } else {
                 if (parent.getChildAdapterPosition(view) == 0) {//开头
@@ -320,8 +322,8 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     outRect.right = dp2px(end / 2)
                     outRect.left = dp2px(end / 2)
                 }
+                outRect.bottom = dp2px(bottom)
             }
-            outRect.bottom = dp2px(bottom)
         }
     }
 
