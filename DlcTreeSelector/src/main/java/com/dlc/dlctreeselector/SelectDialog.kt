@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -245,11 +246,13 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     private fun dataToItemTree(data: ArrayList<T>): ArrayList<T> {
         var newDate = ArrayList<T>()
         var index = 0
+
         data.forEach {
             it.live = if (isTreeArray) 1 else 2
             it.dlc_index = index
             index++
             newDate.add(it)
+            index = 0
             if (it.toChildDlcTree() is ArrayList<*>) {
                 (it.toChildDlcTree() as ArrayList<T>).forEach { two ->
                     two.live = 2
@@ -291,22 +294,20 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             state: RecyclerView.State,
         ) {
             if (isTreeArray) {
-                var liveSum = 0
-                data?.forEachIndexed { index, t ->
-                    if (t.live == 1) {
-                        liveSum++
+                if (originData[parent.getChildAdapterPosition(view)].live == 1) {
+                    outRect.right = 0
+                } else {
+                    val data = originData[parent.getChildAdapterPosition(view)]
+                    if ((data.dlc_index) == 0) {//开头
+                        outRect.right = dp2px(end / 2)
+                    } else if ((data.dlc_index + 1) % spanCount == 0) {//结尾
+                        outRect.left = dp2px(end / 2)
+                    } else if ((data.dlc_index + 1) % spanCount == 1) {//每行开头
+                        outRect.right = dp2px(end / 2)
+                    } else {//其他
+                        outRect.right = dp2px(end / 2)
+                        outRect.left = dp2px(end / 2)
                     }
-                }
-                val index = parent.getChildAdapterPosition(view) + spanCount
-                if (index - liveSum == 0) {//开头
-                    outRect.right = dp2px(end / 2)
-                } else if (((index - liveSum) + 1) % spanCount == 0) {//结尾
-                    outRect.left = dp2px(end / 2)
-                } else if (((index - liveSum) + 1) % spanCount == 1) {//每行开头
-                    outRect.right = dp2px(end / 2)
-                } else {//其他
-                    outRect.right = dp2px(end / 2)
-                    outRect.left = dp2px(end / 2)
                 }
             } else {
                 if (parent.getChildAdapterPosition(view) == 0) {//开头

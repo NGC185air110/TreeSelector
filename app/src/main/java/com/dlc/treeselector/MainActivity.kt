@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         var array = ArrayList<AddressModel>()
         for (it in 0..2) {
             var arrayLeft = ArrayList<AddressModel>()
-            for (index in 0..30) {
+            for (index in 0..10) {
                 arrayLeft.add(AddressModel().apply {
                     id = Random.nextInt()
                     name = "$it+$index"
