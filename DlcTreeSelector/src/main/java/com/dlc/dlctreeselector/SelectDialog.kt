@@ -203,7 +203,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 } else {
                     chickList[0].isChick = false
                     chickList.add(it)
-                    adapter.notifyItemChanged(chickList[0].dlc_index)
+                    adapter.notifyDataSetChanged()
                     chickList.removeAt(0)
                 }
 
