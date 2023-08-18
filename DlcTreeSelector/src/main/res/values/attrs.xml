@@ -14,4 +14,55 @@
         <attr name="itemRectLength" format="integer" />
         <attr name="separatorDisplay" format="boolean" /><!--是否显示分隔符 -->
     </declare-styleable>
+
+    <declare-styleable name="CalendarView">
+        <!--年份-->
+        <attr name="initYear" format="integer" />
+        <!--月份-->
+        <attr name="initMonth" format="integer" />
+        <!--日-->
+        <attr name="initDay" format="integer" />
+        <!--是否选择时段-->
+        <attr name="isInterval" format="boolean" />
+        <!--是否显示当前日期-->
+        <attr name="showToday" format="boolean" />
+        <!--当前日期文字-->
+        <attr name="todayText" format="string|reference" />
+        <!--周文字大小-->
+        <attr name="weekTextSize" format="dimension|reference" />
+        <!--日文字大小-->
+        <attr name="monthDayTextSize" format="dimension|reference" />
+        <!--选择圆圈半径-->
+        <attr name="circleRadius" format="dimension|reference" />
+        <!--周文字颜色-->
+        <attr name="weekTextColor" format="color|reference" />
+        <!--上个月日文字颜色-->
+        <attr name="lastMonthDayTextColor" format="color|reference" />
+        <!--当前月日文字颜色-->
+        <attr name="nowMonthDayTextColor" format="color|reference" />
+        <!--下个月日文字颜色-->
+        <attr name="nextMonthDayTextColor" format="color|reference" />
+        <!--当前日圆圈颜色-->
+        <attr name="nowDayCircleColor" format="color|reference" />
+        <!--选中日圆圈颜色-->
+        <attr name="checkDayCircleColor" format="color|reference" />
+        <!--选中日区间圆圈颜色-->
+        <attr name="checkDayIntervalColor" format="color|reference" />
+        <!--不可用文字颜色-->
+        <attr name="disableTextColor" format="color|reference" />
+        <!--区间选中图形类型-->
+        <attr name="intervalShape" format="enum">
+            <!--圈圈-->
+            <enum name="circle" value="1" />
+            <!--矩形-->
+            <enum name="rect" value="2" />
+        </attr>
+        <!--月份滑动方式-->
+        <attr name="monthMode" format="enum">
+            <!--水平-->
+            <enum name="horizontal" value="1" />
+            <!--垂直-->
+            <enum name="vertical" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

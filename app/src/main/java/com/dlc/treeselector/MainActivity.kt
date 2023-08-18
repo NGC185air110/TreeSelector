@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.dlc.dlctreeselector.DialogStyle
 import com.dlc.dlctreeselector.SelectDialog
+import com.dlc.dlctreeselector.calendar.CalendarDialog
 import com.dlc.dlctreeselector.license.LicensePlateNumberBottomDialog
 import com.dlc.treeselector.model.AddressModel
 import kotlin.random.Random
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         var textView = findViewById<TextView>(R.id.tv_text)
         var tvChick = findViewById<TextView>(R.id.tv_chick)
         var tvCarNo = findViewById<TextView>(R.id.tv_car_no)
+        var tvCalendar = findViewById<TextView>(R.id.tv_calendar)
 
         var array = ArrayList<AddressModel>()
         for (it in 0..2) {
@@ -75,6 +77,12 @@ class MainActivity : AppCompatActivity() {
         }
         tvChick.setOnClickListener {
             selectDialog.show(supportFragmentManager, "selectDialog")
+        }
+        tvCalendar.setOnClickListener {
+            CalendarDialog().builder {
+                setMinTime = "2023-08-01"
+                setMaxTime = "2023-08-18"
+            }.show(supportFragmentManager, "CalendarDialog")
         }
 
         val objectAnimation = ObjectAnimator.ofFloat(tvChick, "scaleY", 1f, 2f)
