@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 日历间隔
@@ -119,6 +121,8 @@ public class CalendarView extends View {
     private boolean monthScrollable = true;
     //可点击
     private boolean itemClickable = true;
+    //区间最大可选几日
+    int maxDate = Integer.MAX_VALUE;
 
     public CalendarView(Context context) {
         super(context);
@@ -158,6 +162,7 @@ public class CalendarView extends View {
             disableTextColor = array.getColor(R.styleable.CalendarView_disableTextColor, disableTextColor);
             intervalShape = array.getInt(R.styleable.CalendarView_intervalShape, intervalShape);
             monthMode = array.getInt(R.styleable.CalendarView_monthMode, HORIZONTAL);
+            maxDate = array.getInt(R.styleable.CalendarView_maxDate, Integer.MAX_VALUE);
             array.recycle();
         }
     }
@@ -412,6 +417,22 @@ public class CalendarView extends View {
                             startDay = null;
                             intervalStart = -1;
                         }
+                    }
+                }
+                if (maxDate != Integer.MAX_VALUE && startDay != null && endDay != null && maxDate >= 1) {
+                    // 将时间戳转换为日期对象
+                    Date date1 = new Date(startDay.getTime());
+                    Date date2 = new Date(endDay.getTime());
+                    // 计算日期对象之间的差距（以天为单位）
+                    long diff = Math.abs(date2.getTime() - date1.getTime());
+                    long diffDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                    // 检查差距是否小于等于指定的天数
+                    if (diffDays <= maxDate) {//小于则正常
+                        Log.d("CalendarView", "正常返回");
+                    } else {
+                        //设置最大
+                        endDay = days.get(days.indexOf(startDay) + maxDate - 1);
+                        intervalEnd = endDay.getTime();
                     }
                 }
                 if (onIntervalSelectListener != null) {

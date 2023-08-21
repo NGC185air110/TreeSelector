@@ -64,5 +64,7 @@
             <!--垂直-->
             <enum name="vertical" value="2" />
         </attr>
+        <!-- 最大可选天数 -->
+        <attr name="maxDate" format="integer" />
     </declare-styleable>
 </resources>

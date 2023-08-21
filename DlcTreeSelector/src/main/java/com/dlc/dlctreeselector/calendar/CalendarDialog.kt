@@ -31,6 +31,9 @@ class CalendarDialog : BottomSheetDialogFragment() {
     var setMinTime: String? = null
     var setMaxTime: String? = null
 
+    //最多选择日期
+    var maxDate: Int = Int.MAX_VALUE
+
     inline fun builder(func: CalendarDialog.() -> Unit): CalendarDialog {
         this.func()
         return this
@@ -76,6 +79,7 @@ class CalendarDialog : BottomSheetDialogFragment() {
         vb.rvData.apply {
             isMonthScrollable = false
             isItemClickable = true
+            maxDate = this@CalendarDialog.maxDate
             setOnCalendarChangeListener { v, date ->
                 vb.tvCurrentMonth.text = SimpleDateFormat("yyyy年MM月").format(date)
             }

@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             CalendarDialog().builder {
                 setMinTime = "2023-08-01"
                 setMaxTime = "2023-08-18"
+                maxDate = 7
             }.show(supportFragmentManager, "CalendarDialog")
         }
 
