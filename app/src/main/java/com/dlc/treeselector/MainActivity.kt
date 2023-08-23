@@ -80,9 +80,12 @@ class MainActivity : AppCompatActivity() {
         }
         tvCalendar.setOnClickListener {
             CalendarDialog().builder {
-                setMinTime = "2023-08-01"
+                setMinTime = "2023-05-01"
                 setMaxTime = "2023-08-18"
-                maxDate = 7
+                maxDate = 30
+                mBackChick = {startTime, endTime ->
+
+                }
             }.show(supportFragmentManager, "CalendarDialog")
         }
 

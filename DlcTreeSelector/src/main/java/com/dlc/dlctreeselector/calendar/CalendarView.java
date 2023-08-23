@@ -431,8 +431,23 @@ public class CalendarView extends View {
                         Log.d("CalendarView", "正常返回");
                     } else {
                         //设置最大
-                        endDay = days.get(days.indexOf(startDay) + maxDate - 1);
-                        intervalEnd = endDay.getTime();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date stDate = sdf.parse(startDay.getDate());
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(stDate);
+                            calendar.add(Calendar.DAY_OF_MONTH, maxDate - 1);
+                            Day newD = new Day();
+                            newD.setType(Day.NOW_MONTH);
+                            newD.setDate(sdf.format(calendar.getTime()));
+                            newD.setTime(calendar.getTime().getTime());
+                            endDay = newD;
+                            /* endDay = days.get(days.indexOf(startDay) + maxDate - 1);*/
+                            intervalEnd = endDay.getTime();
+                            Log.d("CalendarView", "选中了大于当前极限的日期endtime" + endDay.getTime() + "");
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
                 if (onIntervalSelectListener != null) {
