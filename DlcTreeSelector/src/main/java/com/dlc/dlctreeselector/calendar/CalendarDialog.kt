@@ -95,8 +95,6 @@ class CalendarDialog : BottomSheetDialogFragment() {
             }
         }
 
-        // TODO: 还需要添加一个最多选7天的方法
-
         vb.ivLeftArrow.setOnClickListener {
             vb.rvData.lastMonth()
         }
@@ -106,9 +104,14 @@ class CalendarDialog : BottomSheetDialogFragment() {
 
         vb.ivCancel.setOnClickListener { dismiss() }
         vb.tvConfirmBottom.setOnClickListener {
-            if (startTime.isNotEmpty() && endTime.isNotEmpty()) {
-                mBackChick?.invoke(startTime, endTime)
-                dismiss()
+            if (startTime.isNotEmpty()) {
+                if (endTime.isNotEmpty()) {
+                    mBackChick?.invoke(startTime, endTime)
+                    dismiss()
+                } else {
+                    mBackChick?.invoke(startTime, startTime)
+                    dismiss()
+                }
             } else {
                 Toast.makeText(context, "请选择完整的时间段", Toast.LENGTH_LONG).show()
             }
