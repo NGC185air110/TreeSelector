@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
+
+
         var selectDialog = SelectDialog<AddressModel>().builder {
             dialogStyle = DialogStyle.BOTTOM
             data = array
