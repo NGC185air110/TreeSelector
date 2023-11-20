@@ -90,6 +90,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     var pitchOff = R.drawable.bg_item_text
     var tvColorOff = R.color.color_333333
 
+    //是否需要选中加粗
+    var selectBold = false
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -212,21 +215,29 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
         val adapter = TreeAdapter<T>()
         adapter.data = originData
-        adapter.setDate(requireContext(), onChickItem = {
-            if (it?.isChick == false) {
-                if (chickList.size < maximum) {
-                    chickList.add(it)
-                } else {
-                    chickList[0].isChick = false
-                    chickList.add(it)
-                    adapter.notifyDataSetChanged()
-                    chickList.removeAt(0)
-                }
+        adapter.setDate(
+            requireContext(),
+            onChickItem = {
+                if (it?.isChick == false) {
+                    if (chickList.size < maximum) {
+                        chickList.add(it)
+                    } else {
+                        chickList[0].isChick = false
+                        chickList.add(it)
+                        adapter.notifyDataSetChanged()
+                        chickList.removeAt(0)
+                    }
 
-            } else {
-                chickList.remove(it)
-            }
-        }, pitchOn = pitchOn, pitchOff = pitchOff, tvColorOn = tvColorOn, tvColorOff = tvColorOff)
+                } else {
+                    chickList.remove(it)
+                }
+            },
+            pitchOn = pitchOn,
+            pitchOff = pitchOff,
+            tvColorOn = tvColorOn,
+            tvColorOff = tvColorOff,
+            selectBold = selectBold
+        )
         vb.rvData.adapter = adapter
         vb.rvData.addItemDecoration(
             BaseSpacesItemDecorationThree(

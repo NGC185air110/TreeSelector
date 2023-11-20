@@ -2,6 +2,7 @@ package com.dlc.dlctreeselector.adapter
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     var pitchOff = R.drawable.bg_item_text
     var tvColorOff = R.color.color_333333
 
+    //是否需要选中加粗
+    var selectBold = false
 
     var onChickTitle: (() -> Unit)? = null
     var onChickItem: ((data: T?) -> Unit)? = null
@@ -45,6 +48,7 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         pitchOff: Int? = null,
         tvColorOn: Int? = null,
         tvColorOff: Int? = null,
+        selectBold: Boolean = false,
     ) {
         this.context = context
         this.onChickTitle = onChickTitle
@@ -61,6 +65,7 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         if (tvColorOff != null) {
             this.tvColorOff = tvColorOff
         }
+        this.selectBold = selectBold
     }
 
     class TreeAdapterTitleViewHolder : RecyclerView.ViewHolder {
@@ -107,29 +112,40 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             holder.tvText?.text = data?.get(position).toString()
             holder.tvText?.setOnClickListener {
                 onChickItem?.invoke(data?.get(position))
-                if (data?.get(position)?.isChick == true) {
+                if (data?.get(position)?.isChick == true) {//点击选中的
                     holder.tvText?.apply {
                         setBackgroundResource(pitchOff)
                         setTextColor(ContextCompat.getColor(context, tvColorOff))
+                        typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
                     }
                     data?.get(position)?.isChick = false
                 } else {
                     holder.tvText?.apply {
                         setBackgroundResource(pitchOn)
                         setTextColor(ContextCompat.getColor(context, tvColorOn))
+                        typeface =
+                            if (selectBold) Typeface.defaultFromStyle(Typeface.BOLD) else Typeface.defaultFromStyle(
+                                Typeface.NORMAL
+                            )
                     }
                     data?.get(position)?.isChick = true
                 }
             }
+            //初始化
             if (data?.get(position)?.isChick == true) {
                 holder.tvText?.apply {
                     setBackgroundResource(pitchOn)
                     setTextColor(ContextCompat.getColor(context, tvColorOn))
+                    typeface =
+                        if (selectBold) Typeface.defaultFromStyle(Typeface.BOLD) else Typeface.defaultFromStyle(
+                            Typeface.NORMAL
+                        )
                 }
             } else {
                 holder.tvText?.apply {
                     setBackgroundResource(pitchOff)
                     setTextColor(ContextCompat.getColor(context, tvColorOff))
+                    typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
                 }
             }
         }

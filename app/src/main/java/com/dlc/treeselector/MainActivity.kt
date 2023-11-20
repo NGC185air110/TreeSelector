@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
             rvCornerManager = 15
             tvColorOff = R.color.teal_200
             tvColorOn = R.color.black
+            selectBold = true
             BackchickList = {
 
             }
