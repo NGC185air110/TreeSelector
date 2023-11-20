@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         var selectDialog = SelectDialog<AddressModel>().builder {
             dialogStyle = DialogStyle.BOTTOM
             data = array
@@ -77,15 +76,32 @@ class MainActivity : AppCompatActivity() {
         textView.setOnClickListener {
             selectDialog.show(supportFragmentManager, "selectDialog")
         }
+
+        var selectDialogRv = SelectDialog<AddressModel>().builder {
+            dialogStyle = DialogStyle.BOTTOM
+            data = array
+            maximum = 3
+            isTreeArray = false
+            itemMarginBottom = 10F
+            itemMarginEnd = 0F
+            spanCount = 1
+            rvCornerManager = 15
+            tvColorOff = R.color.teal_200
+            tvColorOn = R.color.black
+            BackchickList = {
+
+            }
+        }
+
         tvChick.setOnClickListener {
-            selectDialog.show(supportFragmentManager, "selectDialog")
+            selectDialogRv.show(supportFragmentManager, "selectDialog")
         }
         tvCalendar.setOnClickListener {
             CalendarDialog().builder {
                 setMinTime = "2023-05-01"
                 setMaxTime = "2023-08-18"
                 maxDate = 30
-                mBackChick = {startTime, endTime ->
+                mBackChick = { startTime, endTime ->
 
                 }
             }.show(supportFragmentManager, "CalendarDialog")

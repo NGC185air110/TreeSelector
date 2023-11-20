@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dlc.dlctreeselector.adapter.BaseSpacesItemDecorationThree
 import com.dlc.dlctreeselector.adapter.TreeAdapter
 import com.dlc.dlctreeselector.databinding.DialogSelectBinding
 import com.dlc.dlctreeselector.model.DlcTree
@@ -77,6 +77,19 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     var rvPaddingEnd: Float = 15F
     var rvPaddingBottom: Float = 0F
 
+    //rv两边的间距
+    var rvCornerManager: Int = 0
+
+    //选中样式
+    @DrawableRes
+    var pitchOn = R.drawable.bg_item_text_un
+    var tvColorOn = R.color.color_333333
+
+    //没选中样式
+    @DrawableRes
+    var pitchOff = R.drawable.bg_item_text
+    var tvColorOff = R.color.color_333333
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -104,11 +117,13 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 0 -> {
                     bottomSheetBehavior!!.peekHeight = view.measuredHeight
                 }
+
                 -1 -> {
                     bottomSheetBehavior!!.maxHeight = this.resources.displayMetrics.heightPixels / 2
                     bottomSheetBehavior!!.peekHeight =
                         this.resources.displayMetrics.heightPixels / 2
                 }
+
                 else -> {
                     bottomSheetBehavior!!.peekHeight = dp2px(maxDialogHeight.toFloat())
                 }
@@ -162,6 +177,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     dp2px(10F)
                 )
             }
+
             else -> {
                 vb.tvConfirm.visibility = View.VISIBLE
                 vb.tvConfirmBottom.visibility = View.GONE
@@ -210,9 +226,16 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             } else {
                 chickList.remove(it)
             }
-        })
+        }, pitchOn = pitchOn, pitchOff = pitchOff, tvColorOn = tvColorOn, tvColorOff = tvColorOff)
         vb.rvData.adapter = adapter
-        vb.rvData.addItemDecoration(SpacesItemDecoration(itemMarginEnd, itemMarginBottom))
+        vb.rvData.addItemDecoration(
+            BaseSpacesItemDecorationThree(
+                spanCount,
+                dp2px(itemMarginEnd),
+                dp2px(itemMarginBottom),
+                rvCornerManager
+            )
+        )
 
         vb.tvCancel.setOnClickListener {
             dialog?.dismiss()

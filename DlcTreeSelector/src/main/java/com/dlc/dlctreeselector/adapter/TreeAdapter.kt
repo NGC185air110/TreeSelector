@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dlc.dlctreeselector.R
 import com.dlc.dlctreeselector.model.DlcTree
@@ -26,9 +27,11 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 
     @DrawableRes
     var pitchOn = R.drawable.bg_item_text_un
+    var tvColorOn = R.color.color_333333
 
     @DrawableRes
     var pitchOff = R.drawable.bg_item_text
+    var tvColorOff = R.color.color_333333
 
 
     var onChickTitle: (() -> Unit)? = null
@@ -40,6 +43,8 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         onChickItem: (data: T?) -> Unit,
         pitchOn: Int? = null,
         pitchOff: Int? = null,
+        tvColorOn: Int? = null,
+        tvColorOff: Int? = null,
     ) {
         this.context = context
         this.onChickTitle = onChickTitle
@@ -49,6 +54,12 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
         if (pitchOff != null) {
             this.pitchOff = pitchOff
+        }
+        if (tvColorOn != null) {
+            this.tvColorOn = tvColorOn
+        }
+        if (tvColorOff != null) {
+            this.tvColorOff = tvColorOff
         }
     }
 
@@ -97,17 +108,29 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             holder.tvText?.setOnClickListener {
                 onChickItem?.invoke(data?.get(position))
                 if (data?.get(position)?.isChick == true) {
-                    holder.tvText?.setBackgroundResource(pitchOff)
+                    holder.tvText?.apply {
+                        setBackgroundResource(pitchOff)
+                        setTextColor(ContextCompat.getColor(context, tvColorOff))
+                    }
                     data?.get(position)?.isChick = false
                 } else {
-                    holder.tvText?.setBackgroundResource(pitchOn)
+                    holder.tvText?.apply {
+                        setBackgroundResource(pitchOn)
+                        setTextColor(ContextCompat.getColor(context, tvColorOn))
+                    }
                     data?.get(position)?.isChick = true
                 }
             }
             if (data?.get(position)?.isChick == true) {
-                holder.tvText?.setBackgroundResource(pitchOn)
+                holder.tvText?.apply {
+                    setBackgroundResource(pitchOn)
+                    setTextColor(ContextCompat.getColor(context, tvColorOn))
+                }
             } else {
-                holder.tvText?.setBackgroundResource(pitchOff)
+                holder.tvText?.apply {
+                    setBackgroundResource(pitchOff)
+                    setTextColor(ContextCompat.getColor(context, tvColorOff))
+                }
             }
         }
     }
