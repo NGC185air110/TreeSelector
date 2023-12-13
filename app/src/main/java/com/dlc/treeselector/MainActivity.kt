@@ -43,15 +43,15 @@ class MainActivity : AppCompatActivity() {
             dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = true
-            spanCount = 4
+            spanCount = 3
             itemMarginEnd = 15F
-            itemMarginBottom = 0F
+            itemMarginBottom = 10F
             maximum = 3
             alwaysListNotNull = false
             rvPaddingBottom = 0F
-            rvPaddingStart = 15F
-            rvPaddingEnd = 15F
-            rvPaddingTop = 20F
+            rvPaddingStart = 0F
+            rvPaddingEnd = 0F
+            rvPaddingTop = 0F
             getConfirm = {
                 it.setPadding(
                     dip2px(this@MainActivity, 12F),

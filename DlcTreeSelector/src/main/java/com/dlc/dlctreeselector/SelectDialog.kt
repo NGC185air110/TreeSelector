@@ -78,7 +78,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     var rvPaddingBottom: Float = 0F
 
     //rv两边的间距
-    var rvCornerManager: Int = 0
+    var rvCornerManager: Int = (rvPaddingStart + rvPaddingEnd).toInt()
 
     //选中样式
     @DrawableRes

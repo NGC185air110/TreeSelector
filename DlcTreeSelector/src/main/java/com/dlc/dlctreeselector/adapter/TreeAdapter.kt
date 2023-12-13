@@ -164,4 +164,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         return (dpValue * scale + 0.5f).toInt()
     }
 
+
+
 }
