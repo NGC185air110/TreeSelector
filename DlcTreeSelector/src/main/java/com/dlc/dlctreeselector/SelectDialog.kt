@@ -239,14 +239,19 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             selectBold = selectBold
         )
         vb.rvData.adapter = adapter
-        vb.rvData.addItemDecoration(
-            BaseSpacesItemDecorationThree(
-                spanCount,
-                dp2px(itemMarginEnd),
-                dp2px(itemMarginBottom),
-                rvCornerManager
+        if (isTreeArray) {
+            vb.rvData.addItemDecoration(SpacesItemDecoration(itemMarginEnd, itemMarginBottom))
+
+        } else {
+            vb.rvData.addItemDecoration(
+                BaseSpacesItemDecorationThree(
+                    spanCount,
+                    dp2px(itemMarginEnd),
+                    dp2px(itemMarginBottom),
+                    rvCornerManager
+                )
             )
-        )
+        }
 
         vb.tvCancel.setOnClickListener {
             dialog?.dismiss()

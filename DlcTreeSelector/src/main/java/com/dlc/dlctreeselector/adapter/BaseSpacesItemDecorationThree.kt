@@ -3,6 +3,7 @@ package com.dlc.dlctreeselector.adapter
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.roundToInt
 
 /**
  * title：通用表格分割
@@ -22,7 +23,7 @@ class BaseSpacesItemDecorationThree(
         state: RecyclerView.State,
     ) {
 
-        /*val position = parent.getChildAdapterPosition(view)
+        val position = parent.getChildAdapterPosition(view)
 
         // 获取第几列
         val column = position % gridSize
@@ -38,10 +39,10 @@ class BaseSpacesItemDecorationThree(
         val right = p - left
 
         outRect.left = left.roundToInt()
-        outRect.right = right.roundToInt()*/
+        outRect.right = right.roundToInt()
 
 
-        val position = parent.getChildAdapterPosition(view)
+        /*val position = parent.getChildAdapterPosition(view)
         // 获取第几列
         // 设置左边和右边的间距
         when (position % gridSize) {
@@ -66,7 +67,7 @@ class BaseSpacesItemDecorationThree(
         if (row != 0) { // 设置top
             outRect.top = spaceV
         }
-        outRect.bottom = 0
+        outRect.bottom = 0*/
 
     }
 }
