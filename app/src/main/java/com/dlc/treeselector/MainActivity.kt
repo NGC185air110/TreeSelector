@@ -43,10 +43,12 @@ class MainActivity : AppCompatActivity() {
             dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = true
+            mutuallyExclusive = true
+            mutuallyExclusiveToastValue = "不能同时选择罐车和非罐车"
             spanCount = 3
             itemMarginEnd = 15F
             itemMarginBottom = 10F
-            maximum = 3
+            maximum = 10000000
             alwaysListNotNull = false
             rvPaddingBottom = 0F
             rvPaddingStart = 0F

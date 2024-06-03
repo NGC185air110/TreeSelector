@@ -112,24 +112,6 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
             holder.tvText?.text = data?.get(position).toString()
             holder.tvText?.setOnClickListener {
                 onChickItem?.invoke(data?.get(position))
-                if (data?.get(position)?.isChick == true) {//点击选中的
-                    holder.tvText?.apply {
-                        setBackgroundResource(pitchOff)
-                        setTextColor(ContextCompat.getColor(context, tvColorOff))
-                        typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
-                    }
-                    data?.get(position)?.isChick = false
-                } else {
-                    holder.tvText?.apply {
-                        setBackgroundResource(pitchOn)
-                        setTextColor(ContextCompat.getColor(context, tvColorOn))
-                        typeface =
-                            if (selectBold) Typeface.defaultFromStyle(Typeface.BOLD) else Typeface.defaultFromStyle(
-                                Typeface.NORMAL
-                            )
-                    }
-                    data?.get(position)?.isChick = true
-                }
             }
             //初始化
             if (data?.get(position)?.isChick == true) {

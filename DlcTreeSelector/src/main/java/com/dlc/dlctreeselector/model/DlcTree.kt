@@ -11,4 +11,5 @@ abstract class DlcTree {
     var isChick: Boolean = false
     var live = 0
     var dlc_index = 0
+    var subordination = 0//只用标记从属关系
 }

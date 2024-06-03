@@ -50,6 +50,12 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //是否开启树桩结构
     var isTreeArray = true
 
+    //互斥选项 要isTreeArray = true才能开启
+    var mutuallyExclusive = false
+
+    //互斥提示语
+    var mutuallyExclusiveToastValue = "不能同时选择罐车和非罐车"
+
     //选中保存
     private var chickList: ArrayList<T> = ArrayList()
 
@@ -218,19 +224,38 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         adapter.setDate(
             requireContext(),
             onChickItem = {
-                if (it?.isChick == false) {
-                    if (chickList.size < maximum) {
-                        chickList.add(it)
+                run loop@{
+                    if (it?.isChick == false) {
+                        //互斥
+                        if (isTreeArray && mutuallyExclusive) {
+                            //如果发现有不对的
+                            chickList.forEach { chickListItem ->
+                                if (chickListItem.subordination != it.subordination) {
+                                    Toast.makeText(
+                                        context,
+                                        mutuallyExclusiveToastValue,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    return@loop
+                                }
+                            }
+                        }
+                        //正常流程
+                        if (chickList.size < maximum) {
+                            it.isChick = true
+                            chickList.add(it)
+                        } else {
+                            chickList[0].isChick = false
+                            it.isChick = true
+                            chickList.add(it)
+                            chickList.removeAt(0)
+                        }
                     } else {
-                        chickList[0].isChick = false
-                        chickList.add(it)
-                        adapter.notifyDataSetChanged()
-                        chickList.removeAt(0)
+                        it?.isChick = false
+                        chickList.remove(it)
                     }
-
-                } else {
-                    chickList.remove(it)
                 }
+                adapter.notifyDataSetChanged()
             },
             pitchOn = pitchOn,
             pitchOff = pitchOff,
@@ -285,21 +310,24 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     private fun dataToItemTree(data: ArrayList<T>): ArrayList<T> {
         var newDate = ArrayList<T>()
         var index = 0
-
+        var position = 0
         data.forEach {
             it.live = if (isTreeArray) 1 else 2
             it.dlc_index = index
             index++
             newDate.add(it)
             index = 0
+            it.subordination = position
             if (it.toChildDlcTree() is ArrayList<*>) {
                 (it.toChildDlcTree() as ArrayList<T>).forEach { two ->
                     two.live = 2
                     two.dlc_index = index
                     index++
                     newDate.add(two)
+                    two.subordination = position
                 }
             }
+            position++
         }
         return newDate
     }
