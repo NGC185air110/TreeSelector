@@ -135,6 +135,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
                 else -> {
                     bottomSheetBehavior!!.peekHeight = dp2px(maxDialogHeight.toFloat())
+                    bottomSheetBehavior.maxHeight = dp2px(maxDialogHeight.toFloat())
                 }
             }
         }

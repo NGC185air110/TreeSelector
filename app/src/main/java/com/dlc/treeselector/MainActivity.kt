@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
 
         var selectDialog = SelectDialog<AddressModel>().builder {
+            maxDialogHeight = 550
             dialogStyle = DialogStyle.BOTTOM
             data = array
             isTreeArray = true
