@@ -99,6 +99,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //是否需要选中加粗
     var selectBold = false
 
+    //设置是否关闭下滑
+    var selectCancelable: Boolean = false
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -146,7 +149,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 chickList.add(it)
             }
         }
-        isCancelable = false//关闭下滑
+        isCancelable = selectCancelable//关闭下滑
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
