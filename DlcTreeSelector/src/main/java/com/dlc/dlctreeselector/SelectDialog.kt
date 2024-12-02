@@ -102,6 +102,12 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //设置是否关闭下滑
     var selectCancelable: Boolean = false
 
+    //是否展示清空
+    var tvDeleteIsShow: Boolean = false
+
+    //清空返回
+    var clearBackChick: (() -> Unit)? = null
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -171,6 +177,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 
         when (dialogStyle) {
             DialogStyle.BOTTOM -> {
+                vb.llConfirm.visibility = View.VISIBLE
                 vb.tvConfirm.visibility = View.GONE
                 vb.tvConfirmBottom.visibility = View.VISIBLE
                 vb.tvCancel.visibility = View.GONE
@@ -184,31 +191,32 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     0,
                 )
                 vb.llBg.setPadding(
-                    0,
-                    0,
-                    0,
-                    dp2px(10F)
+                    0, 0, 0, dp2px(10F)
                 )
+
+                //判断是不是需要展示清空
+                vb.tvDelete.visibility = if (tvDeleteIsShow) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
             }
 
             else -> {
+                vb.llConfirm.visibility = View.GONE
                 vb.tvConfirm.visibility = View.VISIBLE
                 vb.tvConfirmBottom.visibility = View.GONE
                 vb.tvCancel.visibility = View.VISIBLE
                 vb.ivCancel.visibility = View.GONE
                 vb.line.visibility = View.VISIBLE
                 vb.rvData.setPadding(
-                    vb.rvData.paddingLeft,
-                    vb.rvData.paddingTop, 0, 0
+                    vb.rvData.paddingLeft, vb.rvData.paddingTop, 0, 0
                 )
             }
         }
 
         vb.rvData.setPadding(
-            dp2px(rvPaddingStart),
-            dp2px(rvPaddingTop),
-            dp2px(rvPaddingEnd),
-            dp2px(rvPaddingBottom)
+            dp2px(rvPaddingStart), dp2px(rvPaddingTop), dp2px(rvPaddingEnd), dp2px(rvPaddingBottom)
         )
 
         val glm = GridLayoutManager(context, spanCount)
@@ -236,9 +244,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                             chickList.forEach { chickListItem ->
                                 if (chickListItem.subordination != it.subordination) {
                                     Toast.makeText(
-                                        context,
-                                        mutuallyExclusiveToastValue,
-                                        Toast.LENGTH_LONG
+                                        context, mutuallyExclusiveToastValue, Toast.LENGTH_LONG
                                     ).show()
                                     return@loop
                                 }
@@ -274,10 +280,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         } else {
             vb.rvData.addItemDecoration(
                 BaseSpacesItemDecorationThree(
-                    spanCount,
-                    dp2px(itemMarginEnd),
-                    dp2px(itemMarginBottom),
-                    rvCornerManager
+                    spanCount, dp2px(itemMarginEnd), dp2px(itemMarginBottom), rvCornerManager
                 )
             )
         }
@@ -290,6 +293,13 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         }
         vb.tvConfirm.setOnClickListener(::confirmClick)
         vb.tvConfirmBottom.setOnClickListener(::confirmClick)
+        vb.tvDelete.setOnClickListener { _ ->
+            originData.forEach {
+                it.isChick = false
+            }
+            dialog?.dismiss()
+            clearBackChick?.invoke()
+        }
 
         return vb.root
     }

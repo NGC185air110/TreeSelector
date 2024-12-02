@@ -73,21 +73,45 @@
         android:clipToPadding="false"
         android:paddingTop="20dp" />
 
-    <TextView
-        android:id="@+id/tv_confirm_bottom"
+    <LinearLayout
+        android:id="@+id/ll_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_item_text_yellow_30"
-        android:gravity="center"
-        android:paddingTop="11dp"
-        android:paddingBottom="11dp"
-        android:text="确定"
-        android:textColor="@color/color_333333"
-        android:textSize="16dp" />
+        android:orientation="horizontal"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_delete"
+            android:gravity="center"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:text="清空"
+            android:textColor="@color/color_333333"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_confirm_bottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@drawable/bg_item_text_yellow_30"
+            android:gravity="center"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:text="确定"
+            android:textColor="@color/color_333333"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

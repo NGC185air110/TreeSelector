@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.dlc.dlctreeselector.DialogStyle
 import com.dlc.dlctreeselector.SelectDialog
@@ -74,6 +75,10 @@ class MainActivity : AppCompatActivity() {
                     sp.append("  ")
                 }
                 textView.text = sp.toString()
+            }
+            tvDeleteIsShow = true
+            clearBackChick = {
+                Toast.makeText(this@MainActivity, "清空筛选项", Toast.LENGTH_LONG).show()
             }
         }
 
