@@ -47,7 +47,7 @@ android {
 }
 afterEvaluate {
     publishing {
-        val versionName = "1.5.9" // 当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
+        val versionName = "1.5.10" // 当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
         publications {
             // Creates a Maven publication called "release".
             create<MavenPublication>("release") {

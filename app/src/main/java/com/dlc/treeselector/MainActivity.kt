@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             for (index in 0..10) {
                 arrayLeft.add(AddressModel().apply {
                     id = Random.nextInt()
-                    name = "$it+$index"
+                    name = "$it+-----\n++++++++++--$index"
                 })
             }
             array.add(AddressModel().apply {
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             itemMarginBottom = 10F
             maximum = 10000000
             maximumHeight = 120F
+            itemPaddingAbout = 7F
             alwaysListNotNull = false
             rvPaddingBottom = 0F
             rvPaddingStart = 0F

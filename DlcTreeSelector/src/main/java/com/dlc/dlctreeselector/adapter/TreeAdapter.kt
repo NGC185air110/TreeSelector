@@ -40,6 +40,9 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     //item等高高度0为没有
     var maximumHeight: Float = 0F
 
+    //item 左右边距
+    var itemPaddingAbout: Float = 0F
+
     var onChickTitle: (() -> Unit)? = null
     var onChickItem: ((data: T?) -> Unit)? = null
 
@@ -52,7 +55,8 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         tvColorOn: Int? = null,
         tvColorOff: Int? = null,
         selectBold: Boolean = false,
-        maximumHeight: Float? = 0F
+        maximumHeight: Float? = 0F,
+        itemPaddingAbout: Float? = 0F,
     ) {
         this.context = context
         this.onChickTitle = onChickTitle
@@ -71,6 +75,7 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
         }
         this.selectBold = selectBold
         this.maximumHeight = maximumHeight ?: 0F
+        this.itemPaddingAbout = itemPaddingAbout ?: 0F
     }
 
     class TreeAdapterTitleViewHolder : RecyclerView.ViewHolder {
@@ -118,6 +123,16 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 // 动态测量高度
                 val view = holder.itemView
                 view.layoutParams.height = dp2px(maximumHeight)
+            }
+            if (itemPaddingAbout != 0F) {
+                holder.tvText?.apply {
+                    setPadding(
+                        dp2px(itemPaddingAbout),
+                        paddingTop,
+                        dp2px(itemPaddingAbout),
+                        paddingBottom
+                    )
+                }
             }
             holder.tvText?.text = data?.get(position).toString()
             holder.tvText?.setOnClickListener {

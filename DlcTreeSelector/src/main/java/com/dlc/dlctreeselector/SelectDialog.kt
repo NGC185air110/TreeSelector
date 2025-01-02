@@ -111,6 +111,8 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //等高高度
     var maximumHeight: Float = 0F
 
+    //item左右两边内边距
+    var itemPaddingAbout: Float = 0F
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -294,6 +296,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             tvColorOff = tvColorOff,
             selectBold = selectBold,
             maximumHeight = maximumHeight,
+            itemPaddingAbout = itemPaddingAbout,
         )
         vb.rvData.adapter = adapter
         if (isTreeArray) {
