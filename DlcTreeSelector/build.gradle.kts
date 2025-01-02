@@ -47,11 +47,11 @@ android {
 }
 afterEvaluate {
     publishing {
-        val versionName = "1.5.5"// 当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
+        val versionName = "1.5.9" // 当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
         publications {
             // Creates a Maven publication called "release".
             create<MavenPublication>("release") {
-                from(components["release"])// 表示发布 release（jitpack 都不会使用到）
+                from(components["release"]) // 表示发布 release（jitpack 都不会使用到）
                 // You can then customize attributes of the publication as shown below.
                 groupId = "com.dlc.dlctreeselector" // 这个是依赖库的组 id
                 artifactId = "dlctreeselector" // 依赖库的名称（jitpack 都不会使用到）

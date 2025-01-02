@@ -108,6 +108,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //清空返回
     var clearBackChick: (() -> Unit)? = null
 
+    //等高高度
+    var maximumHeight: Float = 0F
+
 
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
@@ -155,7 +158,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 chickList.add(it)
             }
         }
-        isCancelable = selectCancelable//关闭下滑
+        isCancelable = selectCancelable //关闭下滑
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -202,6 +205,22 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 }
             }
 
+            DialogStyle.SHOW -> {
+                vb.llConfirm.visibility = View.GONE
+                vb.tvConfirm.visibility = View.GONE
+                vb.tvConfirmBottom.visibility = View.GONE
+                vb.tvCancel.visibility = View.GONE
+                vb.ivCancel.visibility = View.VISIBLE
+                vb.line.visibility = View.GONE
+                vb.rvData.setPadding(
+                    vb.rvData.paddingLeft,
+                    vb.rvData.paddingTop,
+                    0,
+                    0,
+                )
+                vb.tvDelete.visibility = View.GONE
+            }
+
             else -> {
                 vb.llConfirm.visibility = View.GONE
                 vb.tvConfirm.visibility = View.VISIBLE
@@ -236,42 +255,45 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         adapter.setDate(
             requireContext(),
             onChickItem = {
-                run loop@{
-                    if (it?.isChick == false) {
-                        //互斥
-                        if (isTreeArray && mutuallyExclusive) {
-                            //如果发现有不对的
-                            chickList.forEach { chickListItem ->
-                                if (chickListItem.subordination != it.subordination) {
-                                    Toast.makeText(
-                                        context, mutuallyExclusiveToastValue, Toast.LENGTH_LONG
-                                    ).show()
-                                    return@loop
+                if (dialogStyle != DialogStyle.SHOW) {
+                    run loop@{
+                        if (it?.isChick == false) {
+                            //互斥
+                            if (isTreeArray && mutuallyExclusive) {
+                                //如果发现有不对的
+                                chickList.forEach { chickListItem ->
+                                    if (chickListItem.subordination != it.subordination) {
+                                        Toast.makeText(
+                                            context, mutuallyExclusiveToastValue, Toast.LENGTH_LONG
+                                        ).show()
+                                        return@loop
+                                    }
                                 }
                             }
-                        }
-                        //正常流程
-                        if (chickList.size < maximum) {
-                            it.isChick = true
-                            chickList.add(it)
+                            //正常流程
+                            if (chickList.size < maximum) {
+                                it.isChick = true
+                                chickList.add(it)
+                            } else {
+                                chickList[0].isChick = false
+                                it.isChick = true
+                                chickList.add(it)
+                                chickList.removeAt(0)
+                            }
                         } else {
-                            chickList[0].isChick = false
-                            it.isChick = true
-                            chickList.add(it)
-                            chickList.removeAt(0)
+                            it?.isChick = false
+                            chickList.remove(it)
                         }
-                    } else {
-                        it?.isChick = false
-                        chickList.remove(it)
                     }
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
             },
             pitchOn = pitchOn,
             pitchOff = pitchOff,
             tvColorOn = tvColorOn,
             tvColorOff = tvColorOff,
-            selectBold = selectBold
+            selectBold = selectBold,
+            maximumHeight = maximumHeight,
         )
         vb.rvData.adapter = adapter
         if (isTreeArray) {
@@ -380,26 +402,26 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     outRect.bottom = 0
                 } else {
                     val data = originData[parent.getChildAdapterPosition(view)]
-                    if ((data.dlc_index) == 0) {//开头
+                    if ((data.dlc_index) == 0) { //开头
                         outRect.right = dp2px(end / 2)
-                    } else if ((data.dlc_index + 1) % spanCount == 0) {//结尾
+                    } else if ((data.dlc_index + 1) % spanCount == 0) { //结尾
                         outRect.left = dp2px(end / 2)
-                    } else if ((data.dlc_index + 1) % spanCount == 1) {//每行开头
+                    } else if ((data.dlc_index + 1) % spanCount == 1) { //每行开头
                         outRect.right = dp2px(end / 2)
-                    } else {//其他
+                    } else { //其他
                         outRect.right = dp2px(end / 2)
                         outRect.left = dp2px(end / 2)
                     }
                     outRect.bottom = dp2px(bottom)
                 }
             } else {
-                if (parent.getChildAdapterPosition(view) == 0) {//开头
+                if (parent.getChildAdapterPosition(view) == 0) { //开头
                     outRect.right = dp2px(end / 2)
-                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) {//结尾
+                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) { //结尾
                     outRect.left = dp2px(end / 2)
-                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) {//每行开头
+                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) { //每行开头
                     outRect.right = dp2px(end / 2)
-                } else {//其他
+                } else { //其他
                     outRect.right = dp2px(end / 2)
                     outRect.left = dp2px(end / 2)
                 }
@@ -413,7 +435,8 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
 /**
  * NORMAL正常
  * BOTTOM底部
+ * SHOW 展示模式底部没有按钮只提供展示
  */
 enum class DialogStyle {
-    NORMAL, BOTTOM
+    NORMAL, BOTTOM, SHOW
 }

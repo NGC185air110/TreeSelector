@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         var selectDialog = SelectDialog<AddressModel>().builder {
             maxDialogHeight = 550
             selectCancelable = true
-            dialogStyle = DialogStyle.BOTTOM
+            dialogStyle = DialogStyle.SHOW
             data = array
             isTreeArray = true
             mutuallyExclusive = true
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             itemMarginEnd = 15F
             itemMarginBottom = 10F
             maximum = 10000000
+            maximumHeight = 120F
             alwaysListNotNull = false
             rvPaddingBottom = 0F
             rvPaddingStart = 0F
