@@ -65,6 +65,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     var getConfirm: ((TextView) -> Unit)? = null
     var getTitle: ((TextView) -> Unit)? = null
     var getCancel: ((TextView) -> Unit)? = null
+    var getConfirmBottom: ((TextView) -> Unit)? = null
 
     //返回选中数值
     var BackchickList: ((ArrayList<T>) -> Unit)? = null
@@ -177,6 +178,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         getConfirm?.invoke(vb.tvConfirm)
         getTitle?.invoke(vb.tvTitle)
         getCancel?.invoke(vb.tvCancel)
+        getConfirmBottom?.invoke(vb.tvConfirmBottom)
 
         vb.llBg.setBackgroundResource(dialogBg)
 
