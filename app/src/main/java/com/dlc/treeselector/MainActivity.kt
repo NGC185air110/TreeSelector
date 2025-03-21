@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -89,9 +90,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         var selectDialogRv = SelectDialog<AddressModel>().builder {
-            dialogStyle = DialogStyle.BOTTOM
+            dialogStyle = DialogStyle.BOTTOMANDUNVERIFY
             data = array
-            maximum = 3
+            maximum = 1
             isTreeArray = false
             itemMarginBottom = 10F
             itemMarginEnd = 0F
@@ -100,8 +101,19 @@ class MainActivity : AppCompatActivity() {
             tvColorOff = R.color.teal_200
             tvColorOn = R.color.black
             selectBold = true
+            getConfirmBottom = {
+                it.text = "纯粹的自定义"
+            }
             BackchickList = {
-
+                Toast.makeText(this@MainActivity, it[0].name, Toast.LENGTH_LONG).show()
+            }
+            tvConfirmBottomTheOnClickListener = View.OnClickListener {
+                Toast.makeText(
+                    this@MainActivity,
+                    "完全屏蔽BackchickList最严重的一次",
+                    Toast.LENGTH_LONG
+                ).show()
+                dialog?.dismiss()
             }
         }
 

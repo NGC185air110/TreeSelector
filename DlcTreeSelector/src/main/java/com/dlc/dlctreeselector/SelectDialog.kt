@@ -115,6 +115,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //item左右两边内边距
     var itemPaddingAbout: Float = 0F
 
+    //如果你想要完全自定义vb.tvConfirmBottom.setOnClickListener那你就重写这个
+    var tvConfirmBottomTheOnClickListener: View.OnClickListener? = null
+
     inline fun builder(func: SelectDialog<T>.() -> Unit): SelectDialog<T> {
         this.func()
         return this
@@ -183,7 +186,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
         vb.llBg.setBackgroundResource(dialogBg)
 
         when (dialogStyle) {
-            DialogStyle.BOTTOM -> {
+            DialogStyle.BOTTOM, DialogStyle.BOTTOMANDUNVERIFY -> {
                 vb.llConfirm.visibility = View.VISIBLE
                 vb.tvConfirm.visibility = View.GONE
                 vb.tvConfirmBottom.visibility = View.VISIBLE
@@ -209,7 +212,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                 }
             }
 
-            DialogStyle.SHOW -> {
+            DialogStyle.SHOW, DialogStyle.UNVERIFY -> {
                 vb.llConfirm.visibility = View.GONE
                 vb.tvConfirm.visibility = View.GONE
                 vb.tvConfirmBottom.visibility = View.GONE
@@ -290,6 +293,11 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                         }
                     }
                     adapter.notifyDataSetChanged()
+                    //没确定键的直接返回便是
+                    if (dialogStyle == DialogStyle.UNVERIFY || dialogStyle == DialogStyle.BOTTOMANDUNVERIFY) {
+                        BackchickList?.invoke(chickList)
+                        dialog?.dismiss()
+                    }
                 }
             },
             pitchOn = pitchOn,
@@ -319,7 +327,11 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             dialog?.dismiss()
         }
         vb.tvConfirm.setOnClickListener(::confirmClick)
-        vb.tvConfirmBottom.setOnClickListener(::confirmClick)
+        if (tvConfirmBottomTheOnClickListener != null) {
+            vb.tvConfirmBottom.setOnClickListener(tvConfirmBottomTheOnClickListener)
+        } else {
+            vb.tvConfirmBottom.setOnClickListener(::confirmClick)
+        }
         vb.tvDelete.setOnClickListener { _ ->
             originData.forEach {
                 it.isChick = false
@@ -441,7 +453,9 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
  * NORMAL正常
  * BOTTOM底部
  * SHOW 展示模式底部没有按钮只提供展示
+ * UNVERIFY 没有确认按钮的点击直接返回注意一定要设置为单选
+ * BOTTOMANDUNVERIFY 又要展示又要底部按钮又要点击直接返回那就用这个一定要重写tvConfirmBottomTheOnClickListener
  */
 enum class DialogStyle {
-    NORMAL, BOTTOM, SHOW
+    NORMAL, BOTTOM, SHOW, UNVERIFY, BOTTOMANDUNVERIFY
 }
