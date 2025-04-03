@@ -263,41 +263,54 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             requireContext(),
             onChickItem = {
                 if (dialogStyle != DialogStyle.SHOW) {
-                    run loop@{
-                        if (it?.isChick == false) {
-                            //互斥
-                            if (isTreeArray && mutuallyExclusive) {
-                                //如果发现有不对的
-                                chickList.forEach { chickListItem ->
-                                    if (chickListItem.subordination != it.subordination) {
-                                        Toast.makeText(
-                                            context, mutuallyExclusiveToastValue, Toast.LENGTH_LONG
-                                        ).show()
-                                        return@loop
+                    //没确定键的直接返回便是
+                    if (dialogStyle == DialogStyle.UNVERIFY || dialogStyle == DialogStyle.BOTTOMANDUNVERIFY) {
+                        //正常流程
+                        if (chickList.size < maximum) {
+                            it?.isChick = true
+                            it?.let { e -> chickList.add(e) }
+                        } else {
+                            chickList[0].isChick = false
+                            it?.isChick = true
+                            it?.let { e -> chickList.add(e) }
+                            chickList.removeAt(0)
+                        }
+                        BackchickList?.invoke(chickList)
+                        dialog?.dismiss()
+                    } else {
+                        run loop@{
+                            if (it?.isChick == false) {
+                                //互斥
+                                if (isTreeArray && mutuallyExclusive) {
+                                    //如果发现有不对的
+                                    chickList.forEach { chickListItem ->
+                                        if (chickListItem.subordination != it.subordination) {
+                                            Toast.makeText(
+                                                context,
+                                                mutuallyExclusiveToastValue,
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                            return@loop
+                                        }
                                     }
                                 }
-                            }
-                            //正常流程
-                            if (chickList.size < maximum) {
-                                it.isChick = true
-                                chickList.add(it)
+                                //正常流程
+                                if (chickList.size < maximum) {
+                                    it.isChick = true
+                                    chickList.add(it)
+                                } else {
+                                    chickList[0].isChick = false
+                                    it.isChick = true
+                                    chickList.add(it)
+                                    chickList.removeAt(0)
+                                }
                             } else {
-                                chickList[0].isChick = false
-                                it.isChick = true
-                                chickList.add(it)
-                                chickList.removeAt(0)
+                                it?.isChick = false
+                                chickList.remove(it)
                             }
-                        } else {
-                            it?.isChick = false
-                            chickList.remove(it)
                         }
                     }
                     adapter.notifyDataSetChanged()
-                    //没确定键的直接返回便是
-                    if (dialogStyle == DialogStyle.UNVERIFY || dialogStyle == DialogStyle.BOTTOMANDUNVERIFY) {
-                        BackchickList?.invoke(chickList)
-                        dialog?.dismiss()
-                    }
                 }
             },
             pitchOn = pitchOn,

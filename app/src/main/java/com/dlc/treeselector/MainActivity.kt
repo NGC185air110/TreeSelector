@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -90,9 +89,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         var selectDialogRv = SelectDialog<AddressModel>().builder {
-            dialogStyle = DialogStyle.BOTTOMANDUNVERIFY
+            dialogStyle = DialogStyle.BOTTOM
             data = array
-            maximum = 1
+            maximum = 2
             isTreeArray = false
             itemMarginBottom = 10F
             itemMarginEnd = 0F
@@ -107,14 +106,14 @@ class MainActivity : AppCompatActivity() {
             BackchickList = {
                 Toast.makeText(this@MainActivity, it[0].name, Toast.LENGTH_LONG).show()
             }
-            tvConfirmBottomTheOnClickListener = View.OnClickListener {
-                Toast.makeText(
-                    this@MainActivity,
-                    "完全屏蔽BackchickList最严重的一次",
-                    Toast.LENGTH_LONG
-                ).show()
-                dialog?.dismiss()
-            }
+            /* tvConfirmBottomTheOnClickListener = View.OnClickListener {
+                 Toast.makeText(
+                     this@MainActivity,
+                     "完全屏蔽BackchickList最严重的一次",
+                     Toast.LENGTH_LONG
+                 ).show()
+                 dialog?.dismiss()
+             }*/
         }
 
         tvChick.setOnClickListener {
