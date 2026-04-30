@@ -124,6 +124,17 @@ public class CalendarView extends View {
     //区间最大可选几日
     int maxDate = Integer.MAX_VALUE;
 
+    // 优化的Paint对象，避免在onDraw中重复创建
+    private Paint mWeekPaint;
+    private Paint mDayPaint;
+    private Paint mCirclePaint;
+    private Paint mRectPaint;
+    // 静态SimpleDateFormat，避免重复创建
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
+    // Rect复用
+    private Rect mTextBounds = new Rect();
+
     public CalendarView(Context context) {
         super(context);
         initAttributeSet(context, null);
@@ -165,6 +176,24 @@ public class CalendarView extends View {
             maxDate = array.getInt(R.styleable.CalendarView_maxDate, Integer.MAX_VALUE);
             array.recycle();
         }
+        initPaints();
+    }
+
+    private void initPaints() {
+        mWeekPaint = new Paint();
+        mWeekPaint.setAntiAlias(true);
+        mWeekPaint.setTextSize(weekTextSize);
+        mWeekPaint.setColor(weekTextColor);
+
+        mDayPaint = new Paint();
+        mDayPaint.setAntiAlias(true);
+        mDayPaint.setTextSize(monthDayTextSize);
+
+        mCirclePaint = new Paint();
+        mCirclePaint.setAntiAlias(true);
+
+        mRectPaint = new Paint();
+        mRectPaint.setAntiAlias(true);
     }
 
     @Override
@@ -571,18 +600,14 @@ public class CalendarView extends View {
      * @param canvas 画布
      */
     private void drawWeekText(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setTextSize(weekTextSize);
-        paint.setColor(weekTextColor);
         String weekNames[] = getCalendarTitle();
         for (int i = 0; i < weekNames.length; i++) {
             String weekName = weekNames[i];
-            Rect bounds = new Rect();
-            paint.getTextBounds(weekName, 0, weekName.length(), bounds);
-            float x = unitWidth * i + (unitWidth / 2.0F - bounds.width() / 2.0F) + getPaddingLeft();
+            mTextBounds.setEmpty();
+            mWeekPaint.getTextBounds(weekName, 0, weekName.length(), mTextBounds);
+            float x = unitWidth * i + (unitWidth / 2.0F - mTextBounds.width() / 2.0F) + getPaddingLeft();
             float y = unitHeight / 2.0F + getPaddingTop();
-            canvas.drawText(weekName, x, y, paint);
+            canvas.drawText(weekName, x, y, mWeekPaint);
         }
     }
 
@@ -594,9 +619,7 @@ public class CalendarView extends View {
      * @param month  月
      */
     private void drawDayOfMonth(Canvas canvas, int year, int month) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setTextSize(monthDayTextSize);
+        mDayPaint.setTextSize(monthDayTextSize);
         //绘制上个月的天数
         days = getCalendarDays(year, month);
         Calendar calendar = Calendar.getInstance();
@@ -626,10 +649,10 @@ public class CalendarView extends View {
                 days.get(i).setTextColor(disableTextColor);
             }
             days.get(i).setTime(time);
-            Rect bounds = new Rect();
-            paint.getTextBounds(dayText, 0, dayText.length(), bounds);
-            float x = unitWidth * position + unitWidth / 2.0F - bounds.centerX() + getPaddingLeft();
-            float y = unitHeight + unitHeight * row + unitHeight / 2.0F - bounds.centerY() + getPaddingTop();
+            mTextBounds.setEmpty();
+            mDayPaint.getTextBounds(dayText, 0, dayText.length(), mTextBounds);
+            float x = unitWidth * position + unitWidth / 2.0F - mTextBounds.centerX() + getPaddingLeft();
+            float y = unitHeight + unitHeight * row + unitHeight / 2.0F - mTextBounds.centerY() + getPaddingTop();
             days.get(i).setX(x);
             days.get(i).setY(y);
             days.get(i).setPosition(i);
@@ -655,7 +678,7 @@ public class CalendarView extends View {
             float cy = days.get(i).getCy();
             float x = days.get(i).getX();
             float y = days.get(i).getY();
-            paint.setColor(days.get(i).getTextColor());
+            mDayPaint.setColor(days.get(i).getTextColor());
             String dayText = String.valueOf(days.get(i).getDay());
             //当前天
             if (showToday && type == Day.NOW_MONTH && year == nowYear && nowMonth == month && day == nowDay) {
@@ -663,12 +686,12 @@ public class CalendarView extends View {
                     dayText = todayText;
                 }
                 drawDayCircle(canvas, cx, cy, nowDayCircleColor);
-                paint.setColor(Color.WHITE);
+                mDayPaint.setColor(Color.WHITE);
             }
             //选中天
             if (!interval && checkDay != null && type == checkDay.getType() && day == checkDay.getDay()) {
                 drawDayCircle(canvas, cx, cy, checkDayCircleColor);
-                paint.setColor(Color.WHITE);
+                mDayPaint.setColor(Color.WHITE);
             }
             //区间
             if (interval) {
@@ -685,7 +708,7 @@ public class CalendarView extends View {
                         } else {
                             drawDayCircle(canvas, cx, cy, checkDayIntervalColor);
                         }
-                        paint.setColor(Color.WHITE);
+                        mDayPaint.setColor(Color.WHITE);
                     }
                 }
                 if (isStart) {
@@ -693,17 +716,17 @@ public class CalendarView extends View {
                         drawDayRect(canvas, -1, cx, cy, checkDayIntervalColor);
                     }
                     drawDayCircle(canvas, cx, cy, checkDayCircleColor);
-                    paint.setColor(Color.WHITE);
+                    mDayPaint.setColor(Color.WHITE);
                 }
                 if (isEnd) {
                     if (intervalShape == SHAPE_RECT && hasInterval) {
                         drawDayRect(canvas, 1, cx, cy, checkDayIntervalColor);
                     }
                     drawDayCircle(canvas, cx, cy, checkDayCircleColor);
-                    paint.setColor(Color.WHITE);
+                    mDayPaint.setColor(Color.WHITE);
                 }
             }
-            canvas.drawText(dayText, x, y, paint);
+            canvas.drawText(dayText, x, y, mDayPaint);
         }
     }
 
@@ -713,8 +736,12 @@ public class CalendarView extends View {
      * @return 是否为同一天
      */
     private boolean isSameDay(long time, long millis) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(new Date(time)).equals(dateFormat.format(new Date(millis)));
+        if (time == -1 || millis == -1) {
+            return false;
+        }
+        synchronized (DATE_FORMAT) {
+            return DATE_FORMAT.format(new Date(time)).equals(DATE_FORMAT.format(new Date(millis)));
+        }
     }
 
     /**
@@ -726,8 +753,7 @@ public class CalendarView extends View {
      * @return
      */
     public String formatDate(int year, int month, int day) {
-        DecimalFormat format = new DecimalFormat("00");
-        return year + "-" + format.format(month) + "-" + format.format(day);
+        return year + "-" + DECIMAL_FORMAT.format(month) + "-" + DECIMAL_FORMAT.format(day);
     }
 
     /**
@@ -737,11 +763,12 @@ public class CalendarView extends View {
      * @return
      */
     public Date parseDate(String date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        synchronized (DATE_FORMAT) {
+            try {
+                return DATE_FORMAT.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return new Date();
     }
@@ -755,10 +782,8 @@ public class CalendarView extends View {
      * @param color  颜色
      */
     private void drawDayCircle(Canvas canvas, float cx, float cy, int color) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setColor(color);
-        canvas.drawCircle(cx, cy, circleRadius, paint);
+        mCirclePaint.setColor(color);
+        canvas.drawCircle(cx, cy, circleRadius, mCirclePaint);
     }
 
     /**
@@ -771,17 +796,15 @@ public class CalendarView extends View {
      * @param color  颜色
      */
     private void drawDayRect(Canvas canvas, int type, float cx, float cy, int color) {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setColor(color);
+        mRectPaint.setColor(color);
         if (type == -1) {
-            canvas.drawRect(cx, cy - circleRadius, cx + unitWidth / 2, cy + circleRadius, paint);
+            canvas.drawRect(cx, cy - circleRadius, cx + unitWidth / 2, cy + circleRadius, mRectPaint);
         }
         if (type == 0) {
-            canvas.drawRect(cx - unitWidth / 2, cy - circleRadius, cx + unitWidth / 2, cy + circleRadius, paint);
+            canvas.drawRect(cx - unitWidth / 2, cy - circleRadius, cx + unitWidth / 2, cy + circleRadius, mRectPaint);
         }
         if (type == 1) {
-            canvas.drawRect(cx - unitWidth / 2, cy - circleRadius, cx, cy + circleRadius, paint);
+            canvas.drawRect(cx - unitWidth / 2, cy - circleRadius, cx, cy + circleRadius, mRectPaint);
         }
     }
 

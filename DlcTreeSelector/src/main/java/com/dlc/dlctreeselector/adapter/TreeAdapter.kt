@@ -46,6 +46,12 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     var onChickTitle: (() -> Unit)? = null
     var onChickItem: ((data: T?) -> Unit)? = null
 
+    // 缓存 Typeface 对象避免重复创建
+    private val boldTypeface by lazy { Typeface.defaultFromStyle(Typeface.BOLD) }
+    private val normalTypeface by lazy { Typeface.defaultFromStyle(Typeface.NORMAL) }
+    // 缓存 density 值
+    private var cachedDensity: Float? = null
+
     fun setDate(
         context: Context,
         onChickTitle: (() -> Unit)? = null,
@@ -143,16 +149,13 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
                 holder.tvText?.apply {
                     setBackgroundResource(pitchOn)
                     setTextColor(ContextCompat.getColor(context, tvColorOn))
-                    typeface =
-                        if (selectBold) Typeface.defaultFromStyle(Typeface.BOLD) else Typeface.defaultFromStyle(
-                            Typeface.NORMAL
-                        )
+                    typeface = if (selectBold) boldTypeface else normalTypeface
                 }
             } else {
                 holder.tvText?.apply {
                     setBackgroundResource(pitchOff)
                     setTextColor(ContextCompat.getColor(context, tvColorOff))
-                    typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+                    typeface = normalTypeface
                 }
             }
         }
@@ -167,8 +170,10 @@ class TreeAdapter<T : DlcTree> : RecyclerView.Adapter<RecyclerView.ViewHolder>()
     }
 
     private fun dp2px(dpValue: Float): Int {
-        val scale = Resources.getSystem().displayMetrics.density
-        return (dpValue * scale + 0.5f).toInt()
+        if (cachedDensity == null) {
+            cachedDensity = Resources.getSystem().displayMetrics.density
+        }
+        return (dpValue * cachedDensity!! + 0.5f).toInt()
     }
 
 

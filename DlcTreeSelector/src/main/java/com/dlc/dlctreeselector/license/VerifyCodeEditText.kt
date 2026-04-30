@@ -278,11 +278,23 @@ class VerifyCodeEditText @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         // 启动定时任务，定时刷新实现光标闪烁
+        if (mCursorTimer == null) {
+            mCursorTimer = Timer()
+        }
+        mCursorTimerTask?.cancel()
+        mCursorTimerTask = object : TimerTask() {
+            override fun run() {
+                isCursorShowing = !isCursorShowing
+                postInvalidate()
+            }
+        }
         mCursorTimer?.scheduleAtFixedRate(mCursorTimerTask, 0, mCursorDuration)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        mCursorTimerTask?.cancel()
+        mCursorTimerTask = null
         mCursorTimer?.cancel()
         mCursorTimer = null
     }
@@ -301,6 +313,8 @@ class VerifyCodeEditText @JvmOverloads constructor(
 
     companion object {
         val DEFAULT_CURSOR_DURATION = 400//光标闪烁的默认间隔时间
+        // 缓存 density 值
+        private var cachedDensity: Float? = null
     }
 
     /**
@@ -319,8 +333,10 @@ class VerifyCodeEditText @JvmOverloads constructor(
     }
 
     private fun dp2px(dpValue: Float): Int {
-        val scale = Resources.getSystem().displayMetrics.density
-        return (dpValue * scale + 0.5f).toInt()
+        if (cachedDensity == null) {
+            cachedDensity = Resources.getSystem().displayMetrics.density
+        }
+        return (dpValue * cachedDensity!! + 0.5f).toInt()
     }
 
 }

@@ -38,7 +38,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
     //数据
     var data: ArrayList<T>? = null
 
-    private val originData: ArrayList<T> by lazy { dataToItemTree(data!!) }
+    private val originData: ArrayList<T> by lazy { dataToItemTree(data ?: ArrayList()) }
 
     //一行数量
     var spanCount = 3
@@ -269,7 +269,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                         if (chickList.size < maximum) {
                             it?.isChick = true
                             it?.let { e -> chickList.add(e) }
-                        } else {
+                        } else if (chickList.isNotEmpty()) {
                             chickList[0].isChick = false
                             it?.isChick = true
                             it?.let { e -> chickList.add(e) }
@@ -298,7 +298,7 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                                 if (chickList.size < maximum) {
                                     it.isChick = true
                                     chickList.add(it)
-                                } else {
+                                } else if (chickList.isNotEmpty()) {
                                     chickList[0].isChick = false
                                     it.isChick = true
                                     chickList.add(it)
@@ -426,12 +426,16 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
             parent: RecyclerView,
             state: RecyclerView.State,
         ) {
+            val position = parent.getChildAdapterPosition(view)
+            if (position == RecyclerView.NO_POSITION) {
+                return
+            }
             if (isTreeArray) {
-                if (originData[parent.getChildAdapterPosition(view)].live == 1) {
+                if (position < originData.size && originData[position].live == 1) {
                     outRect.right = 0
                     outRect.bottom = 0
-                } else {
-                    val data = originData[parent.getChildAdapterPosition(view)]
+                } else if (position < originData.size) {
+                    val data = originData[position]
                     if ((data.dlc_index) == 0) { //开头
                         outRect.right = dp2px(end / 2)
                     } else if ((data.dlc_index + 1) % spanCount == 0) { //结尾
@@ -445,11 +449,11 @@ class SelectDialog<T : DlcTree> : BottomSheetDialogFragment() {
                     outRect.bottom = dp2px(bottom)
                 }
             } else {
-                if (parent.getChildAdapterPosition(view) == 0) { //开头
+                if (position == 0) { //开头
                     outRect.right = dp2px(end / 2)
-                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 0) { //结尾
+                } else if ((position + 1) % spanCount == 0) { //结尾
                     outRect.left = dp2px(end / 2)
-                } else if ((parent.getChildAdapterPosition(view) + 1) % spanCount == 1) { //每行开头
+                } else if ((position + 1) % spanCount == 1) { //每行开头
                     outRect.right = dp2px(end / 2)
                 } else { //其他
                     outRect.right = dp2px(end / 2)
